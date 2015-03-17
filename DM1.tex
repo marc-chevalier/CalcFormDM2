@@ -1,0 +1,75 @@
+\input{src/macros.tex}
+
+\title{Un algorithme diviser pour régner pour le calcul \texorpdfstring{$n!$}{n!} en précision arbitraire}
+\author{
+    Marc \textsc{Chevalier}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{10}
+
+On a $x_1 = 1$ et $\forall n\in \llbracket 2,n\rrbracket, x_n = n x_{n-1}$.
+
+On appelle $F(n)$ le coût du calcul de $n!$.
+
+On a, à grand coup de comparaison série-intégrale :
+\[
+    \begin{aligned}
+        F(n) &= F(n-1) + \log(n!)\\
+        &= \sum\limits_{k=1}^k \log(k!)\\
+        &\sim \sum\limits_{k=1}^n n \log n\\
+        &\sim n^2\log n
+    \end{aligned}
+\]
+
+D'où un coût total en $\cplx{n^2\log n}$.
+
+\section*{11}
+
+On a évidemment
+\[
+    \begin{aligned}
+        p(a, b) &= p\left(a, \frac{a+b}{2}\right)p\left(\frac{a+b}{2}, b\right)
+    \end{aligned}
+\]
+et
+\[
+    p(0,n) = n!
+\]
+
+D'autre part, en notant $F(a, b)$ le cout de calcul de $p(a, b)$
+\[
+    \begin{aligned}
+        F(0,n) &\leqslant 2F\left(\floor{\frac{n}{2}}, n\right) + M\left(n \log n\right)\\
+        &\leqslant 2^{\log n} + \sum\limits_{k=1}^{\log n} M\left(\left(\frac{n}{2^k}\right)\log\left(\frac{n}{2^k}\right)\right)\\
+        &\leqslant n + \sum\limits_{k=1}^{\log n} M\left(\left(\frac{n}{2^k}\right)\log\left(\frac{n}{2^k}\right)\right)\\
+        &\leqslant n + \log nM(n \log n)
+    \end{aligned}
+\]
+
+D'où un coût total de $\cplx{\log n M(n\log n)}$.
+
+Avec les algorithmes de multiplications connus
+\begin{itemize}
+    \item Multiplication naïve ($M(n) = \cplx{k^2}$) : le cout total est 
+        \[
+            \cplx{n^2 \log^3 n}
+        \]
+        Ce n'est pas efficace.
+    \item Multiplication de \textsc{Karatsuba} ($M(n) = \cplx{k^{\frac{\log 3}{\log 2}}}$) : le cout total est 
+        \[
+            \cplx{n^{\frac{\log 3}{\log 2}} \log^{1+{\frac{\log 3}{\log 2}}} n} \approx \cplx{n^{1.58} \log^{2.58} n}
+        \]
+        C'est un peu efficace.
+    \item Multiplication avec la FFT ($M(n) = \cplx{k\log k \log \log k}$) : le cout total est 
+        \[
+            \cplx{n\times \log^3 n\times\log^2 \log n \times \log \log \log n}
+        \]
+        C'est très efficace.
+\end{itemize}
+
+\end{document}
+
